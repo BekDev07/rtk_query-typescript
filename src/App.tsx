@@ -1,21 +1,22 @@
+import { useEffect } from "react";
 import "./App.css";
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
-import { increment } from "./store/reducers/UserSlice";
+import { fetchUsers } from "./store/reducers/actionCreators";
 
 function App() {
-  const { count } = useAppSelector((state) => state.userReducer);
   const dispatch = useAppDispatch();
-  const handleIncrement = () => {
-    console.log("salom");
-
-    dispatch(increment(0));
-  };
+  const { users, isLoading, error } = useAppSelector(
+    (state) => state.userReducer
+  );
+  useEffect(() => {
+    dispatch(fetchUsers());
+    // eslint-disable-next-line
+  }, []);
   return (
     <div className="App">
-      <h2>{count}</h2>
-      <button onClick={handleIncrement} type="button">
-        inc
-      </button>
+      {isLoading && <h1>Loading...</h1>}
+      {error && <h1>{error}</h1>}
+      {JSON.stringify(users, null, 2)}
     </div>
   );
 }
